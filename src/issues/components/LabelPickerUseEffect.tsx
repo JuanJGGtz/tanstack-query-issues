@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 
 async function getLabels() {
   const url = `https://api.github.com/repos/facebook/react/labels`;
@@ -23,15 +23,16 @@ interface GitHubLabel {
 
 export const LabelPicker = () => {
 
-  const labelsQuery = useQuery({
-    queryKey: ['labels'],
-    queryFn: () => getLabels()
-  });
+  const [labels, setLabels] = useState<GitHubLabel[] | null>(null);
 
+  useEffect(() => {
+    const getData = async () => {
+      const data = await getLabels();
+      setLabels(data);
+    };
 
-  if (labelsQuery.isLoading) {
-    return <div className="flex justify-center items-center h-52">Loading...</div>
-  }
+    getData();
+  }, []);
 
   return (
     <>
@@ -41,12 +42,10 @@ export const LabelPicker = () => {
       >
         Primary
       </span>
-
-
       {
-        labelsQuery.data && labelsQuery.data.map((label: GitHubLabel) => (
+        labels && labels.map((label: GitHubLabel, index) => (
           <span
-            key={label.id}
+            key={index}
             className="px-2 py-1 rounded-full text-xs font-semibold hover:bg-slate-800 cursor-pointer"
             style={{ border: `1px solid #${label.color}`, color: `#${label.color}` }}
           >
