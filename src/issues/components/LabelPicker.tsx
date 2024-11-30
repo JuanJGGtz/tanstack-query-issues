@@ -1,31 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-
-async function getLabels() {
-  const url = `https://api.github.com/repos/facebook/react/labels`;
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error("Fail API");
-    }
-    const data = await response.json();
-    //console.log('data', data)
-    return data;
-  } catch (error) {
-    console.log('error', error)
-  }
-}
-
-interface GitHubLabel {
-  id: number;
-  name: string;
-  color: string;
-}
+import { githubGetLabels } from "../../actions/get-labels.action";
+import { GitHubLabel } from "../../interface/label.interface";
 
 export const LabelPicker = () => {
 
   const labelsQuery = useQuery({
     queryKey: ['labels'],
-    queryFn: () => getLabels()
+    queryFn: () => githubGetLabels()
   });
 
 
