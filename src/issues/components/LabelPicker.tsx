@@ -1,13 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
-import { githubGetLabels } from "../../actions/get-labels.action";
 import { GitHubLabel } from "../../interface/label.interface";
+import { useLabels } from "../hooks/useLabels";
 
 export const LabelPicker = () => {
 
-  const labelsQuery = useQuery({
-    queryKey: ['labels'],
-    queryFn: () => githubGetLabels()
-  });
+  const { labelsQuery } = useLabels();
+
 
 
   if (labelsQuery.isLoading) {
@@ -28,7 +25,7 @@ export const LabelPicker = () => {
         labelsQuery.data && labelsQuery.data.map((label: GitHubLabel) => (
           <span
             key={label.id}
-            className="px-2 py-1 rounded-full text-xs font-semibold hover:bg-slate-800 cursor-pointer"
+            className="px-2 py-1 rounded-full text-xs font-semibold hover:bg-slate-800 cursor-pointer animate-fadeIn"
             style={{ border: `1px solid #${label.color}`, color: `#${label.color}` }}
           >
             {label.name}
