@@ -41,7 +41,11 @@ interface Reactions {
   eyes: number;
 }
 
-interface GitHubIssue {
+export enum IssueState {
+  Open = "open",
+  Closed = "closed"
+}
+export interface GitHubIssue {
   url: string;
   repository_url: string;
   labels_url: string;
@@ -54,7 +58,7 @@ interface GitHubIssue {
   title: string;
   user: User;
   labels: any[];
-  state: string;
+  state: IssueState;
   locked: boolean;
   assignee: null | User;
   assignees: User[];

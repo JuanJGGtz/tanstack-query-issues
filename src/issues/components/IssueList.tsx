@@ -1,10 +1,10 @@
-import { useIssues } from '../hooks/useIssues';
 import { IssueItem } from './IssueItem';
+interface Props {
+  issues: GitHubIssue[]
+}
+export const IssueList: React.FC<Props> = ({ issues }) => {
 
-export const IssueList = () => {
-
-  const { data } = useIssues();
-  console.log('data', data)
+  console.log('issye', issues)
   return (
     <>
       {/* Botones de All, Open, Closed */}
@@ -16,8 +16,8 @@ export const IssueList = () => {
 
       {/* Lista de issues */}
       <div className="mt-4">
-        {data?.map((issue) => (
-          <IssueItem key={issue.id} />
+        {issues?.map((issue: GitHubIssue) => (
+          <IssueItem key={issue.id} issue={issue} />
         ))}
       </div>
     </>
