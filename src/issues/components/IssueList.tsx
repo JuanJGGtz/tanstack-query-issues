@@ -1,3 +1,4 @@
+import { GitHubIssue } from '../../interface/issues.interface';
 import { IssueItem } from './IssueItem';
 interface Props {
   issues: GitHubIssue[]
