@@ -1,23 +1,42 @@
 import { GitHubIssue } from '../../interface/issues.interface';
 import { IssueItem } from './IssueItem';
-interface Props {
-  issues: GitHubIssue[]
-}
-export const IssueList: React.FC<Props> = ({ issues }) => {
 
-  console.log('issye', issues)
+interface Props {
+  issues: GitHubIssue[];
+  handleChangeState?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  btnState: IssueState;
+}
+
+// Definir tipos y constantes
+type IssueState = 'all' | 'open' | 'closed';
+
+const ISSUE_STATES: IssueState[] = ['all', 'open', 'closed'];
+
+const BUTTON_LABELS: Record<IssueState, string> = {
+  all: 'All',
+  open: 'Open',
+  closed: 'Closed'
+};
+
+export const IssueList: React.FC<Props> = ({ btnState, issues, handleChangeState }) => {
+
   return (
     <>
-      {/* Botones de All, Open, Closed */}
       <div className="flex gap-4">
-        <button className="btn active">All</button>
-        <button className="btn">Open</button>
-        <button className="btn">Closed</button>
+        {ISSUE_STATES.map(state => (
+          <button
+            key={state}
+            onClick={handleChangeState}
+            name={state}
+            className={`btn ${btnState === state ? 'active' : ''}`}
+          >
+            {BUTTON_LABELS[state]}
+          </button>
+        ))}
       </div>
 
-      {/* Lista de issues */}
       <div className="mt-4">
-        {issues?.map((issue: GitHubIssue) => (
+        {issues.map((issue) => (
           <IssueItem key={issue.id} issue={issue} />
         ))}
       </div>
