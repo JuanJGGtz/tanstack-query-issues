@@ -1,7 +1,12 @@
 import { GitHubLabel } from "../../interface/label.interface";
 import { useLabels } from "../hooks/useLabels";
 
-export const LabelPicker = () => {
+interface LabelPickerProps {
+  
+  handleChangeFilter: (filter: any) => void;
+}
+
+export const LabelPicker = ({ handleChangeFilter }: LabelPickerProps) => {
 
   const { labelsQuery } = useLabels();
 
@@ -10,7 +15,6 @@ export const LabelPicker = () => {
   if (labelsQuery.isLoading) {
     return <div className="flex justify-center items-center h-52">Loading...</div>
   }
-
   return (
     <>
       <span
@@ -27,6 +31,7 @@ export const LabelPicker = () => {
             key={label.id}
             className="px-2 py-1 rounded-full text-xs font-semibold hover:bg-slate-800 cursor-pointer animate-fadeIn"
             style={{ border: `1px solid #${label.color}`, color: `#${label.color}` }}
+            onClick={() => handleChangeFilter({ [label.node_id]: label.id })}
           >
             {label.name}
           </span>

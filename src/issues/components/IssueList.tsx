@@ -4,7 +4,7 @@ import { IssueItem } from './IssueItem';
 interface Props {
   issues: GitHubIssue[];
   handleChangeState?: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  btnState: IssueState;
+  state: IssueState;
 }
 
 // Definir tipos y constantes
@@ -18,19 +18,19 @@ const BUTTON_LABELS: Record<IssueState, string> = {
   closed: 'Closed'
 };
 
-export const IssueList: React.FC<Props> = ({ btnState, issues, handleChangeState }) => {
+export const IssueList: React.FC<Props> = ({ state, issues, handleChangeState }) => {
 
   return (
     <>
       <div className="flex gap-4">
-        {ISSUE_STATES.map(state => (
+        {ISSUE_STATES.map(stateElement => (
           <button
-            key={state}
+            key={stateElement}
             onClick={handleChangeState}
-            name={state}
-            className={`btn ${btnState === state ? 'active' : ''}`}
+            name={stateElement}
+            className={`btn ${state === stateElement ? 'active' : ''}`}
           >
-            {BUTTON_LABELS[state]}
+            {BUTTON_LABELS[stateElement]}
           </button>
         ))}
       </div>

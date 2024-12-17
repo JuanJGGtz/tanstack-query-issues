@@ -4,9 +4,9 @@ import { LabelPicker } from '../components/LabelPicker';
 import { useIssues } from '../hooks/useIssues';
 
 
-type IssueState = 'all' | 'open' | 'closed';
+export type IssueState = 'all' | 'open' | 'closed';
 
-const States: Record<IssueState, IssueState> = {
+export const States: Record<IssueState, IssueState> = {
   all: 'all',
   open: 'open',
   closed: 'closed'
@@ -14,10 +14,14 @@ const States: Record<IssueState, IssueState> = {
 
 
 
-export const ListView = () => {
-  const [btnState, setBtnState] = useState<IssueState>(States.all);
 
-  const { issueQuery: { isLoading, data = [] } } = useIssues();
+export const ListView = () => {
+  const [state, setState] = useState<IssueState>(States.all);
+  const [filters, setFilters] = useState({});
+
+  const { issueQuery: { isLoading, data = [] } } = useIssues(
+    state,
+  );
 
   if (isLoading) {
     return <div className="flex justify-center items-center">
@@ -25,23 +29,28 @@ export const ListView = () => {
     </div>
   }
 
-  const issues = btnState === States.all
+  const issues = state === States.all
     ? data
-    : data.filter(issue => issue.state === btnState);
+    : data.filter(issue => issue.state === state);
 
 
   const handleChangeState = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setBtnState(event.currentTarget.name as IssueState);
+    setState(event.currentTarget.name as IssueState);
   };
 
+  const handleChangeFilter = (filter: any) => {
+    setFilters((prevValue) => ({ ...prevValue, ...filter }))
+  }
+  
+  console.log('filters', filters)
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 mt-5">
       <div className="col-span-1 sm:col-span-2">
-        <IssueList btnState={btnState} issues={issues} handleChangeState={handleChangeState} />
+        <IssueList state={state} issues={issues} handleChangeState={handleChangeState} />
       </div>
 
       <div className="col-span-1 px-2">
-        <LabelPicker />
+        <LabelPicker handleChangeFilter={handleChangeFilter} />
       </div>
     </div>
   );
