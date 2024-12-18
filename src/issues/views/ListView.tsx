@@ -17,7 +17,7 @@ export const States: Record<IssueState, IssueState> = {
 
 export const ListView = () => {
   const [state, setState] = useState<IssueState>(States.all);
-  const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState<string[]>([]);
 
   const { issueQuery: { isLoading, data = [] } } = useIssues(
     state,
@@ -38,10 +38,13 @@ export const ListView = () => {
     setState(event.currentTarget.name as IssueState);
   };
 
-  const handleChangeFilter = (filter: any) => {
-    setFilters((prevValue) => ({ ...prevValue, ...filter }))
+  const handleChangeFilter = (filter: string) => {
+    let index = filters.indexOf(filter);
+    if (index == -1) {
+      setFilters(prevValues => ([...prevValues, filter]))
+    }
   }
-  
+
   console.log('filters', filters)
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 mt-5">
@@ -50,7 +53,7 @@ export const ListView = () => {
       </div>
 
       <div className="col-span-1 px-2">
-        <LabelPicker handleChangeFilter={handleChangeFilter} />
+        <LabelPicker filters={filters} handleChangeFilter={handleChangeFilter} />
       </div>
     </div>
   );

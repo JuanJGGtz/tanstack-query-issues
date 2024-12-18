@@ -2,11 +2,11 @@ import { GitHubLabel } from "../../interface/label.interface";
 import { useLabels } from "../hooks/useLabels";
 
 interface LabelPickerProps {
-  
+  filters: string[]
   handleChangeFilter: (filter: any) => void;
 }
 
-export const LabelPicker = ({ handleChangeFilter }: LabelPickerProps) => {
+export const LabelPicker = ({ handleChangeFilter, filters }: LabelPickerProps) => {
 
   const { labelsQuery } = useLabels();
 
@@ -26,16 +26,32 @@ export const LabelPicker = ({ handleChangeFilter }: LabelPickerProps) => {
 
 
       {
-        labelsQuery.data && labelsQuery.data.map((label: GitHubLabel) => (
-          <span
-            key={label.id}
-            className="px-2 py-1 rounded-full text-xs font-semibold hover:bg-slate-800 cursor-pointer animate-fadeIn"
-            style={{ border: `1px solid #${label.color}`, color: `#${label.color}` }}
-            onClick={() => handleChangeFilter({ [label.node_id]: label.id })}
-          >
-            {label.name}
-          </span>
-        ))
+        labelsQuery.data && labelsQuery.data.map((label: GitHubLabel) => {
+
+          const cssProperties = [
+            {
+              backgroundColor: `#${label.color}`,
+              color: `white`,
+            },
+            {
+              backgroundColor: 'none',
+              color: `#${label.color}`,
+            },
+          ];
+
+          const backgroundColor = `${filters?.indexOf(String(label.id)) == -1 ? cssProperties[1] : cssProperties[0]}`;
+
+          return (
+            <span
+              key={label.id}
+              className="px-2 py-1 rounded-full text-xs font-semibold hover:bg-slate-800 cursor-pointer animate-fadeIn"
+              style={{ ...backgroundColor, border: `1px solid #${label.color}`, color: `#${label.color}` }}
+              onClick={() => handleChangeFilter(label.id)}
+            >
+              {label.name}
+            </span>
+          )
+        })
       }
     </>
   );
